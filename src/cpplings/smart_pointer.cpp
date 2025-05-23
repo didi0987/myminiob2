@@ -26,11 +26,13 @@ public:
   Foo()
   {
     // TODO: 添加必要的日志信息，观察函数何时调用。
+    std::cout << "foo called" << std::endl;
   }
 
   ~Foo()
   {
     // TODO: 添加必要的日志信息，观察函数何时调用。
+    std::cout << "foo destruct" << std::endl;
   }
 
   void display() { std::cout << "Displaying Foo content." << std::endl; }
@@ -52,7 +54,7 @@ int main()
   {
     std::shared_ptr<Foo> shared_ptr1 = std::make_shared<Foo>();
     {
-      std::shared_ptr<Foo> shared_ptr2 = shared_ptr1;  // 增加引用计数
+      std::shared_ptr<Foo> shared_ptr2 = shared_ptr1; // 增加引用计数
       shared_ptr2->display();
       std::cout << "shared_ptr use_count(): " << shared_ptr2.use_count() << std::endl;
       // sharedPtr2 超出作用域，引用计数减少但不销毁对象

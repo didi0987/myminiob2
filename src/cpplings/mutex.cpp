@@ -18,15 +18,16 @@ See the Mulan PSL v2 for more details. */
   ...
   m.unlock(); // 释放锁
 */
-#include <iostream>  // std::cout
-#include <atomic>    // std::atomic
-#include <thread>    // std::thread
-#include <vector>    // std::vector
-#include <cassert>   // assert
+#include <iostream> // std::cout
+#include <atomic>   // std::atomic
+#include <thread>   // std::thread
+#include <vector>   // std::vector
+#include <cassert>  // assert
+#include <mutex>    // mutex
 
 struct Node
 {
-  int   value;
+  int value;
   Node *next;
 };
 
@@ -39,13 +40,15 @@ void append_node(int val)
   Node *new_node = new Node{val, old_head};
 
   // TODO: 使用 mutex 来使这段代码线程安全。
+  std::mutex m;
+  std::lock_guard lock(m);
   list_head = new_node;
 }
 
 int main()
 {
   std::vector<std::thread> threads;
-  int                      thread_num = 50;
+  int thread_num = 50;
   for (int i = 0; i < thread_num; ++i)
     threads.push_back(std::thread(append_node, i));
   for (auto &th : threads)
@@ -53,7 +56,8 @@ int main()
 
   // 注意：在 `append_node` 函数是线程安全的情况下，`list_head` 中将包含 50 个 Node 节点。
   int cnt = 0;
-  for (Node *it = list_head; it != nullptr; it = it->next) {
+  for (Node *it = list_head; it != nullptr; it = it->next)
+  {
     std::cout << ' ' << it->value;
     cnt++;
   }
@@ -62,7 +66,8 @@ int main()
   std::cout << cnt << std::endl;
 
   Node *it;
-  while ((it = list_head)) {
+  while ((it = list_head))
+  {
     list_head = it->next;
     delete it;
   }

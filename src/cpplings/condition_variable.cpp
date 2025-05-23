@@ -33,11 +33,17 @@ void add_count_and_notify()
 {
   std::scoped_lock slk(m);
   count += 1;
+  if (count == expect_thread_num) {
+    cv.notify_one();
+  }
 }
 
 void waiter_thread()
 {
-  // TODO: 等待 count 的值达到 expect_thread_num，然后打印 count 的值
+  std::unique_lock ul(m);
+  cv.wait(ul, [] {
+    return count == expect_thread_num ? true : false;
+  });  // TODO: 等待 count 的值达到 expect_thread_num，然后打印 count 的值
   std::cout << "Printing count: " << count << std::endl;
   assert(count == expect_thread_num);
 }

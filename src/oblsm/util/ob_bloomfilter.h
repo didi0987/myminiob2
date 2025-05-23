@@ -11,6 +11,8 @@ See the Mulan PSL v2 for more details. */
 #pragma once
 
 #include "common/lang/string.h"
+#include <bitset>
+#include <vector>
 namespace oceanbase {
 
 /**
@@ -20,27 +22,36 @@ namespace oceanbase {
 class ObBloomfilter
 {
 public:
+  std::vector<bool> vec;
+  size_t            bits;
+  size_t            func_count;
+  size_t            item_count;
   /**
    * @brief Constructs a Bloom filter with specified parameters.
    *
    * @param hash_func_count Number of hash functions to use. Default is 4.
    * @param totoal_bits Total number of bits in the Bloom filter. Default is 65536.
    */
-  ObBloomfilter(size_t hash_func_count = 4, size_t totoal_bits = 65536) {}
+  ObBloomfilter(size_t hash_func_count = 4, size_t total_bits = 65536);
+  // {
+  //   for (size_t i = 0; i < total_bits; i++) {
+  //     vec.push_back(0);
+  //   }
+  // };
 
   /**
    * @brief Inserts an object into the Bloom filter.
    * @details This method computes hash values for the given object and sets corresponding bits in the filter.
    * @param object The object to be inserted.
    */
-  void insert(const string &object) {}
+  void insert(const string &object);
 
   /**
    * @brief Clears all entries in the Bloom filter.
    *
    * @details Resets the filter, removing all previously inserted objects.
    */
-  void clear() {}
+  void clear();
 
   /**
    * @brief Checks if an object is possibly in the Bloom filter.
@@ -48,18 +59,17 @@ public:
    * @param object The object to be checked.
    * @return true if the object might be in the filter, false if definitely not.
    */
-  bool contains(const string &object) const { return false; }
-
+  bool contains(const string &object) const;
   /**
    * @brief Returns the count of objects inserted into the Bloom filter.
    */
-  size_t object_count() const { return 0; }
+  size_t object_count() const;
 
   /**
    * @brief Checks if the Bloom filter is empty.
    * @return true if the filter is empty, false otherwise.
    */
-  bool empty() const { return 0 == object_count(); }
+  bool empty() const;
 
 private:
 };
